@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lazy-loading images</title>
+    <script src="echo.js"></script>
+    <style>
+        img{
+            height: 50%;
+        }
+    </style>
+</head>
+<body>
+<img src="../../MobileAlbum/img/1.jpg" alt="Photo" data-echo="../../MobileAlbum/img/1.jpg">
+<img src="../../MobileAlbum/img/1.jpg" alt="Photo" data-echo="../../MobileAlbum/img/2.jpg">
+<img src="../../MobileAlbum/img/1.jpg" alt="Photo" data-echo="../../MobileAlbum/img/3.jpg">
+<img src="../../MobileAlbum/img/1.jpg" alt="Photo" data-echo="../../MobileAlbum/img/4.jpg">
+<img src="../../MobileAlbum/img/1.jpg" alt="Photo" data-echo="../../MobileAlbum/img/5.jpg">
+<script>
+    echo.init({
+        offset: 0,
+        throttle: 250,
+        unload: false,
+        callback: function (element, op) {
+//            console.log(element, 'has been', op + 'ed')
+        }
+    });
+</script>
+<script>
+//    var f = function () {
+//        var ff = function () {
+//            a=2;
+//            console.log('函数内: ' + a);
+//        };
+//        ff();
+//        console.log('函数外: ' + a);
+//
+//    };
+//    var x = new f();
+//    console.log(a);
+</script>
+</body>
+</html>

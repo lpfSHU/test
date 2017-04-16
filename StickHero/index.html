@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>棍子英雄</title>
+    <style>
+        #wrap{
+            width: 300px;
+            height: 500px;
+            border: 1px solid whitesmoke;
+            margin: 70px auto;
+            overflow: hidden;
+        }
+        #gameContent{
+            width: 600px;
+            height: 500px;
+            background-color: whitesmoke;
+            position: relative;
+            left: 0;
+            transition: left 1s;
+        }
+        #leftdiv{
+            width: 80px;
+            height: 200px;
+            background-color: black;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        #middlediv{
+            width: 80px;
+            height: 200px;
+            background-color: black;
+            position: absolute;
+            bottom: 0;
+            left: 200px;
+        }
+        #rightdiv{
+            width: 80px;
+            height: 200px;
+            background-color: black;
+            position: absolute;
+            bottom: 0;
+            left: 400px;
+        }
+        #hero{
+            width: 40px;
+            height: 40px;
+            background: #007ba4;
+            position: absolute;
+            bottom: 200px;
+            left: 0;
+            transition: left .5s;
+        }
+        #stick{
+            width: 0;
+            height: 6px;
+            background: black;
+            position: absolute;
+            left: 40px;
+            bottom: 200px;
+            transform: rotate(-90deg) translateY(6px);
+            transform-origin: 0 6px;
+            transition: transform .5s;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="gameContent">
+        <div id="leftdiv"></div>
+        <div id="middlediv"></div>
+        <div id="rightdiv"></div>
+        <div id="hero"></div>
+        <div id="stick"></div>
+    </div>
+</div>
+<script>
+    var score = 0;
+    var timer = null;
+    var over = false;
+    var turn = true;
+    //棍子长度
+    var num = 0;
+    var gameContent = document.getElementById('gameContent');
+    var stick = document.getElementById('stick');
+    var leftdiv = document.getElementById('leftdiv');
+    var middlediv = document.getElementById('middlediv');
+    var rightdiv = document.getElementById('rightdiv');
+    var hero = document.getElementById('hero');
+    var nextPosition = {};
+    document.onmousedown = function () {
+        if(!turn){
+            return;
+        }
+        stick.style.transition = 'none';
+        timer = setInterval(function () {
+            num++;
+            stick.style.width = num + 'px';
+        },5);
+    };
+    document.onmouseup = function () {
+        clearInterval(timer);
+        stick.style.transition = "0.5s";
+        stick.style.transform = "rotate(0deg)";
+        if(num > middlediv.offsetLeft-40 && num < middlediv.offsetLeft+middlediv.offsetWidth-40){
+//            stick.style.transition = "0.5s";
+//            stick.style.transform = "rotate(0deg)";
+        }else {
+            over = true;
+        }
+        turn = false;
+    };
+    stick.addEventListener('transitionend', function (event) {
+//        event = event || window.event;
+        event = document.all ? window.event : arguments[0] ? arguments[0] : event;
+
+        console.log("stick transitionend event");
+        console.log(event);
+        if(over){
+            console.log('over');
+            event.stopPropagation();
+//            event.preventBubble();
+//            event.preventDefault();
+            alert('游戏结束!' + ' 得分：' + score);
+            reset();
+        }else {
+            hero.style.transition = "left 0.5s 0.3s, transform 0.3s";
+            hero.style.transform = 'translateY(-6px)';
+            hero.style.left = middlediv.offsetLeft + "px";
+        }
+        event.stopPropagation();
+    });
+    hero.addEventListener('transitionend',function (event) {
+//        event = event || window.event;
+        event = document.all ? window.event : arguments[0] ? arguments[0] : event;
+        if(event.propertyName === 'transform'){
+            event.stopPropagation();
+            return;
+        }
+        gameContent.style.transition = "left 1s";
+        gameContent.style.left = -middlediv.offsetLeft + 'px';
+
+        rightdiv.style.transition = 'none';
+        nextPosition = createNext();
+        rightdiv.style.left = nextPosition.ileft + 'px';
+        rightdiv.style.width = nextPosition.iwidth + 'px';
+
+        event.stopPropagation();
+    });
+    gameContent.addEventListener('transitionend',function () {
+        if(!over){
+            score++;
+            gameContent.style.transition = 'none';
+            gameContent.style.left = 0;
+
+            stick.style.transition = 'none';
+            stick.style.width = 0;
+            stick.style.transform = 'rotate(-90deg) translateY(6px)';
+
+            hero.style.transition = 'none';
+            hero.style.left = 0;
+
+            leftdiv.style.transition = 'none';
+            leftdiv.style.width = middlediv.style.width;
+
+            middlediv.style.transition = 'none';
+            middlediv.style.left = rightdiv.offsetLeft - middlediv.offsetLeft + 'px';
+            middlediv.style.width = nextPosition.iwidth + 'px';
+
+            hero.style.transition = "transform 0.3s";
+            hero.style.transform = 'translateY(0)';
+
+            num = 0;
+            turn = true;
+        }
+    });
+
+    function creatNum(start,end){
+        return parseInt(Math.random()*(end-start)+start)
+    }
+    function createNext() {
+        var iwidth = creatNum(46, 80);
+        var ileft = creatNum(300, middlediv.offsetLeft+300-80);
+        return {ileft: ileft, iwidth: iwidth};
+    }
+    function reset() {
+        console.log('reset');
+        stick.style.transition = 'none';
+        stick.style.width = 0;
+        stick.style.transform = 'rotate(-90deg) translateY(6px)';
+        console.log(stick.style.transition);
+        num = 0;
+        over = false;
+        turn = true;
+        score = 0;
+    }
+</script>
+</body>
+</html>

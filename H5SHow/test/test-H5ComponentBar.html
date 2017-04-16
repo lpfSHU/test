@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+
+    <title>Title</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-size: 12px;
+        }
+
+        .iphone{
+            width: 340px;
+            height: 540px;
+            background-color: #fff;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -270px 0 0 -170px;
+        }
+
+        /*.h5_component_base{*/
+            /*transition: all 1s;*/
+        /*}*/
+        /*.h5_component_base_load{*/
+            /*opacity: 1;*/
+        /*}*/
+        /*.h5_component_base_leave{*/
+            /*opacity: 0;*/
+        /*}*/
+
+    </style>
+    <script type="text/javascript" src="../js/lib/jquery.js"></script>
+    <script type="text/javascript" src="../js/H5ComponentBase.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/H5ComponentBase.css">
+    <!--引入柱状图的资源-->
+    <script type="text/javascript" src="../js/H5ComponentBar.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/H5ComponentBar.css">
+</head>
+
+<body>
+    <div class="iphone">
+
+    </div>
+    <script>
+        var cfg = {
+            type : 'bar',
+            width : 530,
+            height : 600,
+            data:[
+                ['JS', .4 ,  'green'],
+                ['HTML5', .2 ],
+                ['jQuery', .1 ],
+                ['HTML', .25 ],
+                ['CSS3', .3]
+            ],
+            css : {
+                top:100,
+                opacity:0
+            },
+            animateIn : {top:200, opacity:1},
+            animateOut : {top:100, opacity:0},
+            center : true
+        };
+        var h5 = new H5ComponentBar("myname", cfg);
+        $('.iphone').append(h5);
+
+        var leave = true;
+        $('body').click(function () {
+            leave = !leave;
+            $('.h5_component').trigger(leave ? 'onLeave' : 'onLoad');
+        });
+        $('.h5_component').trigger('onLoad');
+    </script>
+
+</body>
+</html>

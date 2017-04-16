@@ -1,0 +1,239 @@
+/*页面样式*/
+
+/*===================*/
+/*基本默认值*/
+/*===================*/
+html {
+    font-size: 62.5%;
+    /* 1rem=10px */
+    /*浏览器默认 1rem=16px*/
+    color: #222;
+}
+
+::selection{
+    background-color: #b3d4fc;
+    text-shadow: none;
+}
+
+::-moz-selection
+{
+    background-color: #b3d4fc;
+    text-shadow: none;
+}
+
+ul{
+    margin: 0;
+    padding: 0;
+}
+li{
+    list-style: none;
+}
+
+/*===================*/
+/*工具样式*/
+/*===================*/
+.center-block{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.pull-right{
+    float: right !important;
+}
+
+.pull-left{
+    float: left !important;
+}
+
+.text-right{
+    text-align: right !important;
+}
+
+.text-left{
+    text-align: left !important;
+}
+.text-center{
+    text-align: center !important;
+}
+.hide{
+    display: none !important;
+}
+.show{
+    display: block !important;
+}
+.invisible{
+    visibility: hidden;
+}
+
+.text-hide{
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+}
+
+.clearfix:before,
+.clearfix:after{
+    content: " ";
+    display: table;
+}
+.clearfix:after{
+    clear: both;
+}
+
+/*===================*/
+/*自定义样式*/
+/*===================*/
+body{
+    font-size: 1.2rem;
+    line-height: 1.5;
+    background-color: #f7f7f7;
+}
+.main{
+    width: 100%;
+}
+.main .header{
+    width: 30%;
+    text-align: center;
+    font-size: 2rem;
+    color: #00aaee;
+    margin: 3rem 0 3rem 0;
+}
+@media only screen and (max-width: 50em) {
+    .main .header{
+        width: 100%;
+    }
+}
+.main .main-content{
+    width: 90%;
+    margin: 0 auto;
+}
+.main .main-content .item{
+
+}
+.main .main-content .item .time{
+    display: inline-block;
+    width: 12%;
+    vertical-align: top;
+    text-align: right;
+    padding-right: 1.5rem;
+    box-sizing:border-box;
+}
+.main .main-content .item .time .time-ymd{
+    color: rgba(133,133,133,1);
+    font-size: 1rem;
+}
+.main .main-content .item .time .time-hs{
+    color: #00aaee;
+    font-size: 3rem;
+}
+.main .main-content .item .content{
+    display: inline-block;
+    width: 87%;
+    box-sizing:border-box;
+    border-left: .6rem solid steelblue;
+}
+@media only screen and (min-width: 30.0625em) and (max-width: 50em) {
+    .main .main-content .item .time{
+        width: 20%;
+    }
+    .main .main-content .item .time .time-hs{
+        font-size: 1.5rem;
+    }
+    .main .main-content .item .content{
+        width: 79%;
+    }
+}
+.main .main-content .item .content .content-margin{
+    margin-left: 2rem;
+}
+.main .main-content .item .content .content-margin .corner{
+    background-clip:padding-box;
+    /*background-clip:content-box;*/
+    color: white;
+    padding: 1rem;
+    border-radius: .5rem;
+    position: relative;
+}
+/* 添加小尖角*/
+.main .main-content .item:nth-of-type(odd) .content .content-margin .corner:before{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 1rem solid transparent;
+    border-right-color: #00aaee;
+    left: -2rem;
+
+}
+.main .main-content .item:nth-of-type(even) .content .content-margin .corner:before{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 1rem solid transparent;
+    border-right-color: steelblue;
+    left: -2rem;
+}
+/*背景颜色*/
+.main .main-content .item:nth-of-type(odd) .content .content-margin .corner{
+    background-color: #00aaee;
+}
+.main .main-content .item:nth-of-type(even) .content .content-margin .corner{
+    background-color: steelblue;
+}
+/*不同内容的间距*/
+.main .main-content .item+.item .content .content-margin .corner{
+    margin-top: .5rem;
+}
+.main .main-content .item .content .corner .title{
+    font-size: 1.7rem;
+    border-bottom: 1px solid white;
+    padding-bottom: .5rem;
+}
+.main .main-content .item .content .corner .content-main{
+    margin-top: 1.5rem;
+    font-size: 1rem;
+}
+@media only screen and (max-width: 30em){
+    .main .main-content .item .time{
+        display: block;
+        width: 100%;
+        text-align: left;
+        border: 0;
+    }
+    .main .main-content .item .content{
+        display: block;
+        width: 100%;
+        border: 0;
+        margin-top: 1rem;
+    }
+    .main .main-content .item .content .content-margin{
+        margin-left: 0;
+    }
+    /* 添加小尖角*/
+    .main .main-content .item:nth-of-type(odd) .content .content-margin .corner:before{
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 1rem solid transparent;
+        border-bottom-color: #00aaee;
+        left: 1rem;
+        top: -2rem;
+    }
+    .main .main-content .item:nth-of-type(even) .content .content-margin .corner:before{
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 1rem solid transparent;
+        border-bottom-color: steelblue;
+        left: 1rem;
+        top: -2rem;
+    }
+    .main .main-content .item+.item{
+        margin-top: 2.5rem;
+    }
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        .main{
+            width: 100px;
+            height: 400px;
+            position: absolute;
+            overflow:  hidden;
+        }
+        .main div{
+            width: 100px;
+            height: 100px;
+            transition: all .3s;
+            position: absolute;
+            overflow:  hidden;
+        }
+        .main div:hover{
+            z-index: 1;
+            height: 150px;
+
+        }
+
+        .main .first {
+            background-color: red;
+            top: 0;
+        }
+        .main .second {
+            background-color: blue;
+            top: 25%;
+        }
+        .main .third {
+            background-color: blueviolet;
+            top: 50%;
+        }
+        .main .fourth {
+            background-color: olivedrab;
+            bottom: 0;
+         }
+
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="first"></div>
+        <div class="second"></div>
+        <div class="third"></div>
+        <div class="fourth"></div>
+    </div>
+</body>
+</html>

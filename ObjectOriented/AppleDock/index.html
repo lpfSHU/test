@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dock</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #div1{
+            width: 100%;
+            height: auto;
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+        }
+        #div1 img{
+            height: 50px;
+            width: auto;
+            transition: height .07s, width .07s;
+        }
+    </style>
+</head>
+<body>
+<div id="div1">
+    <img src="images/1.png">
+    <img src="images/2.png">
+    <img src="images/3.png">
+    <img src="images/4.png">
+    <img src="images/5.png">
+    <img src="images/1.png">
+    <img src="images/2.png">
+    <img src="images/3.png">
+    <img src="images/4.png">
+    <img src="images/5.png">
+    <img src="images/2.png">
+    <img src="images/3.png">
+    <img src="images/4.png">
+    <img src="images/5.png">
+</div>
+<script>
+    var dock = document.getElementById('div1');
+    var imgs = dock.getElementsByTagName('img');
+    dock.onmouseleave = function () {
+        for(i=0 ;i<imgs.length; i++){
+            imgs[i].style.height = '50px';
+        }
+    };
+    dock.onmousemove = function (event) {
+        event = document.all ? window.event : arguments[0] ? arguments[0] : event;
+        var x2 = event.clientX;
+        var y2 = event.clientY;
+        var distance = [];
+        var max = 0;
+        for(var i=0 ;i<imgs.length; i++){
+            var rect = imgs[i].getBoundingClientRect();
+            var x1 = rect.left + rect.width/2;
+            var y1 = rect.top + rect.height/2;
+            var dis = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
+            if(dis > max){
+                max = dis;
+            }
+            distance.push(dis);
+        }
+        var liner = linearScale([0, max], [80, 50]);
+        for(i=0 ;i<imgs.length; i++){
+            var height = liner(distance[i]);
+            if(height < 70){
+                height = 50;
+            }
+            imgs[i].style.height = height + 'px';
+        }
+    };
+    /**
+     *
+     * @param domain 数组
+     * @param range  数组
+     */
+    function linearScale(domain, range) {
+//        y = a*x + b
+        var a = (range[1] - range[0]) / (domain[1] - domain[0]);
+        var b = range[0] - a * domain[0];
+        return function (x) {
+            return a * x + b;
+        };
+    }
+</script>
+</body>
+</html>

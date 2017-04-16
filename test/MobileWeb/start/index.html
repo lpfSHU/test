@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./jquery-3.2.0.js"></script>
+    <title>下拉刷新-上滑加载</title>
+    <style>
+        @media only screen and (min-width: 30.0625em){
+            body{
+                width: 30.0625em;
+                margin: 0 auto;
+            }
+            .refresh{
+                width: 100%;
+                height: 6rem;
+                display: -webkit-flex;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: -1;
+            }
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            font-size: 62.5%;
+            /* 1rem=10px */
+            /*浏览器默认 1rem=16px*/
+            height: 100%;
+            min-height: 100%;
+        }
+        body{
+            /*min-height: inherit;*/
+            height: 100%;
+            min-height: 100%;
+        }
+        .go-top{
+            width: 5rem;
+            height: 5rem;
+            position: fixed;
+            right: .3rem;
+            bottom: .3rem;
+            /*border-radius: 5rem;*/
+            /*margin: 0 auto;*/
+            transform-style:preserve-3d
+        }
+        .go-top img{
+            border-radius: 100%;
+            width: 100%;
+            height: 100%;
+        }
+
+        .refresh{
+            position: fixed;
+            top: 0;
+            z-index: -1;
+            width: 100%;
+            height: 6rem;
+            text-align: center;
+        }
+        .refresh span{
+            color: steelblue;
+            line-height: 6rem;
+            font-size: 3rem;
+            /*font-family:"Times New Roman";*/
+        }
+        .refresh .refresh-animation{
+            height: 100%;
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .refresh .refresh-animation div{
+            width: .5rem;
+            height: 4rem;
+        }
+        .refresh .refresh-animation div+div{
+            margin-left: .2rem;
+        }
+        .refresh .refresh-animation div{
+            background-color: #00aaee;
+            animation: refresh .5s infinite;
+        }
+        @keyframes refresh {
+            50%{
+                height: 0;
+            }
+        }
+        .refresh .refresh-animation div:nth-child(10){
+            animation-delay: .45s;
+        }
+        .refresh .refresh-animation div:nth-child(9){
+            animation-delay: .4s;
+        }
+        .refresh .refresh-animation div:nth-child(8){
+            animation-delay: .35s;
+        }
+        .refresh .refresh-animation div:nth-child(7){
+            animation-delay: .3s;
+        }
+        .refresh .refresh-animation div:nth-child(6){
+            animation-delay: .25s;
+        }
+        .refresh .refresh-animation div:nth-child(5){
+            animation-delay: .2s;
+        }
+        .refresh .refresh-animation div:nth-child(4){
+            animation-delay: .15s;
+        }
+        .refresh .refresh-animation div:nth-child(3){
+            animation-delay: .1s;
+        }
+        .refresh .refresh-animation div:nth-child(2){
+            animation-delay: .05s;
+        }
+        .container{
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            min-height: 100%;
+            background-color: #eee;
+            /*transform: translate(0,6rem);*/
+        }
+
+        .container .item{
+            box-sizing: border-box;
+            /*border-bottom: 1px solid darkolivegreen;*/
+            height: 8rem;
+
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+        }
+        .container .item+.item{
+            margin-top: .5rem;
+        }
+        .container .item .item-img{
+            width: 8rem;
+            height: 100%;
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .container .item .item-img img{
+            width: 7rem;
+            height: 7rem;
+            /*height: calc(width);*/
+            /*margin: .2rem 0;*/
+        }
+        .container .item .content{
+            width: calc(100% - 8rem );
+            /*border-bottom: 1px solid darkgray;*/
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            margin-left: 1rem;
+            margin-top: .5rem;
+            margin-bottom: .5rem;
+        }
+        .container .item+.item .content:before{
+            content: '';
+            width: 100%;
+            height: 0;
+            border-bottom: 1px solid white;
+            transform: translate(0,-.5rem);
+        }
+        .container .item .content .content-top{
+            font-size: 1.3rem;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+        .container .item .content .content-bottom .price{
+            color: darkred;
+            margin-bottom: 2px;
+            font-size: 1.5rem;
+        }
+        .container .item .content .content-bottom .item-info p{
+            font-size: .6rem;
+            color: dimgray;
+        }
+        .container .item .content .content-bottom .item-info span{
+            font-size: 10px;
+            border: 1px solid darkred;
+            border-radius: .3rem;
+            color: darkred;
+        }
+        .load-more{
+            width: 100%;
+            height: 2rem;
+            background-color: #8d8d8d;
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .load-more span{
+            line-height: 2rem;
+            /*font-size: 2rem;*/
+            color: white;
+        }
+        .load-more div{
+            width: 1rem;
+            height: 1rem;
+            background-color: white;
+            border-radius: 1rem;
+            margin-left: .3rem;
+            animation: load-more 1.5s infinite;
+        }
+        .load-more div:nth-of-type(2){
+            animation-delay: .25s;
+        }
+        .load-more div:nth-of-type(3){
+            animation-delay: .5s;
+        }
+        @keyframes load-more {
+            75%{
+                transform: scale(0);
+            }
+        }
+    </style>
+    <!--参考-->
+    <!--http://www.cnblogs.com/hf8051/p/4571813.html-->
+    <!--http://www.111cn.net/wy/js-ajax/87990.htm-->
+</head>
+<body>
+    <div class="go-top" style="display: none"><img src="./img/go-top.png"></div>
+    <div class="refresh">
+        <span>下拉刷新</span>
+        <div style="display: none" class="refresh-animation">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="item">
+            <div class="item-img"><img src="./img/1.jpg"></div>
+            <div class="content">
+                <p class="content-top">
+                    这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介
+                </p>
+                <div class="content-bottom">
+                    <p class="price">¥6999.00--1</p>
+                    <p class="item-info"><span>自营</span>&nbsp;12345条评价&nbsp;95%好评</p>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-img"><img src="./img/1.jpg"></div>
+            <div class="content">
+                <p class="content-top">
+                    这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介
+                </p>
+                <div class="content-bottom">
+                    <p class="price">¥6999.00--2</p>
+                    <p class="item-info"><span>自营</span>&nbsp;12345条评价&nbsp;95%好评</p>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-img"><img src="./img/1.jpg"></div>
+            <div class="content">
+                <p class="content-top">
+                    这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介
+                </p>
+                <div class="content-bottom">
+                    <p class="price">¥6999.00--3</p>
+                    <p class="item-info"><span>自营</span>&nbsp;12345条评价&nbsp;95%好评</p>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-img"><img src="./img/1.jpg"></div>
+            <div class="content">
+                <p class="content-top">
+                    这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介
+                </p>
+                <div class="content-bottom">
+                    <p class="price">¥6999.00--4</p>
+                    <p class="item-info"><span>自营</span>&nbsp;12345条评价&nbsp;95%好评</p>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-img"><img src="./img/1.jpg"></div>
+            <div class="content">
+                <p class="content-top">
+                    这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介
+                </p>
+                <div class="content-bottom">
+                    <p class="price">¥6999.00--5</p>
+                    <p class="item-info"><span>自营</span>&nbsp;12345条评价&nbsp;95%好评</p>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-img"><img src="./img/1.jpg"></div>
+            <div class="content">
+                <p class="content-top">
+                    这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介
+                </p>
+                <div class="content-bottom">
+                    <p class="price">¥6999.00--6</p>
+                    <p class="item-info"><span>自营</span>&nbsp;12345条评价&nbsp;95%好评</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="load-more">
+        <span>正在疯狂加载中</span>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+<script>
+    var count = 6;
+    function Refresh() {
+        this.body = document.body;
+        this.container = document.querySelector('div.container');
+        this.distance = document.querySelector('.refresh').offsetHeight;
+        this.clientY1 = 0;
+        this.clientY2 = 0;
+        this.locked = false;
+        this.callback = function () {
+            setTimeout(function () {
+                this.container.style.transition = 'all .3s ease-out';
+                this.container.style.transform = 'none';
+                document.querySelector('.refresh span').style.display = '';
+                document.querySelector('.refresh .refresh-animation').style.display = 'none';
+                this.locked = false;
+            }.bind(this),1000);
+        };
+        this.container.addEventListener('touchstart', function (event) {
+            this.touchStart(event);
+        }.bind(this), false);
+        this.container.addEventListener('touchmove', function (event) {
+            this.touchMove(event);
+        }.bind(this), false);
+        this.container.addEventListener('touchend', function (event) {
+            this.touchEnd(event);
+        }.bind(this), false);
+    }
+    Refresh.prototype.touchStart = function (event) {
+        if(event.targetTouches.length == 1 && this.locked == false){
+            this.clientY1 = event.targetTouches[0].clientY;
+        }
+    };
+    Refresh.prototype.touchMove = function (event) {
+        this.container.style.transition = 'none';
+        this.clientY2 = event.targetTouches[0].clientY;
+        if(event.targetTouches.length == 1 && this.locked ==false && this.clientY2 > this.clientY1 && this.body.scrollTop ==0){
+            if(this.clientY2-this.clientY1 >=this.distance){
+                this.locked = true;
+                document.querySelector('.refresh span').style.display = 'none';
+                document.querySelector('.refresh .refresh-animation').style.display = '';
+                this.callback();
+            }else {
+                this.container.style.transform = 'translate(0, '+ (this.clientY2-this.clientY1) +'px)';
+            }
+        }
+    };
+    Refresh.prototype.touchEnd = function (event) {
+        if(event.changedTouches.length == 1 && this.locked ==false){
+            this.clientY2 = event.changedTouches[0].clientY;
+            if(this.clientY2 -  this.clientY1 < this.distance){
+                this.container.style.transition = 'all .2s ease-out';
+                this.container.style.transform = 'none';
+            }
+        }
+    };
+
+    function LoadMore() {
+        this.locked = false;
+        this.container = document.querySelector('div.container');
+        this.goTop = document.querySelector('.go-top');
+        this.loadMoreHeight = document.querySelector('.load-more').offsetHeight;
+//        IE不支持该API
+        window.addEventListener('scroll', function () {
+            if($(window).scrollTop() > 200){
+                this.goTop.style.display = 'block';
+            }else {
+                this.goTop.style.display = 'none';
+            }
+            var dh = $(document).height();
+            var wh = $(window).height();
+            var ws = $(window).scrollTop();
+            if(dh-this.loadMoreHeight <= wh + ws && this.locked == false){
+                this.locked = true;
+                setTimeout(function () {
+                    this.requestData();
+                    this.locked =false;
+                }.bind(this),500);
+            }else {
+            }
+        }.bind(this));
+        this.goTop.addEventListener('touchend', function (event) {
+            event.stopPropagation();
+//            $(window).scrollTop(0);
+            var start = 0, during = 60;
+            var scollTop = $(window).scrollTop();
+            var _run = function () {
+                start++;
+                var top = QuadEaseIn(start, scollTop, -scollTop, during);
+                $(window).scrollTop(top);
+                if(start<= during){
+                    requestAnimationFrame(_run);
+                }
+            };
+            requestAnimationFrame(_run);
+        }.bind(this), false);
+    }
+    LoadMore.prototype.requestData = function () {
+        for(var i =0; i<6; i++){
+            this.additem();
+        }
+    };
+    LoadMore.prototype.additem = function () {
+        var div = document.createElement("div");
+        div.setAttribute('class', 'item');
+        div.innerHTML = '<div class="item-img"><img src="./img/1.jpg"></div>\
+            <div class="content">\
+            <p class="content-top">\
+                这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介这是商品名称和简介\
+            </p>\
+            <div class="content-bottom">\
+            <p class="price">¥6999.00--'+ (++count) +'</p>\
+        <p class="item-info"><span>自营</span>&nbsp;12345条评价&nbsp;95%好评</p>\
+        </div>\
+        </div>';
+        this.container.appendChild(div);
+    };
+
+
+    function QuadEaseIn(t, b, c, d) {
+        return c * (t /= d) * t + b;
+    }
+
+    window.onload =function () {
+        $(window).scrollTop(0);
+        new Refresh();
+        new LoadMore();
+    };
+
+//    var aaa = 1;
+//    function test() {
+//        console.log(aaa);
+//        if(aaa<100){
+//            requestAnimationFrame(test);
+//            aaa++;
+//        }
+//
+//    }
+//    requestAnimationFrame(test);
+</script>
+</body>
+</html>

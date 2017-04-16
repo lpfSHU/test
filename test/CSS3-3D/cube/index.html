@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS-3d</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .wrap{
+            perspective: 1200px;
+            width: 300px;
+            margin: 100px auto;
+            position: relative;
+        }
+        ul{
+            list-style: none;
+            transform-origin: center;
+            transform-style:preserve-3d;
+            position: relative;
+            width: 300px;
+            height: 300px;
+            transition: all 1s;
+            transform: rotateX(90deg) rotateY(0deg) rotateZ(0deg);
+        }
+        ul li{
+            position: absolute;
+            transform-origin: center;
+            background: steelblue;
+            color: whitesmoke;
+            font-size: 100px;
+            line-height: 300px;
+            text-align: center;
+            width: 300px;
+            height: 300px;
+            left: 0;
+            top:0;
+        }
+        .first{
+            transform: translate3d(0, 0, 150px);
+        }
+        .second{
+            transform: rotateY(-90deg) translate3d(0, 0, 150px);
+        }
+        .third{
+            transform: rotateX(-90deg) translate3d(0, 0, 150px);
+        }
+        .fourth{
+            transform: rotateX(90deg) translate3d(0, 0, 150px);
+        }
+        .fifth{
+            transform: rotateY(90deg) translate3d(0, 0, 150px);
+        }
+        .sixth{
+            transform: rotateY(180deg) translate3d(0, 0, 150px);
+        }
+
+
+        .btn{
+            position: relative;
+            width: 100%;
+            text-align: center;
+        }
+        .btn button{
+            width: 50px;
+            height: 30px;
+            font-size: 15px;
+            line-height: 15px;
+            padding: 0px;
+            border: 0;
+            border-radius: 4px;
+            background-color: steelblue;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <ul>
+        <li class="first">1</li>
+        <li class="second">2</li>
+        <li class="third">3</li>
+        <li class="fourth">4</li>
+        <li class="fifth">5</li>
+        <li class="sixth">6</li>
+    </ul>
+</div>
+<div class="btn">
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button>4</button>
+    <button>5</button>
+    <button>6</button>
+    <button>随机</button>
+</div>
+<script>
+    var transforms = {
+        btn1 : "none",
+        btn2 : "rotateX(90deg) rotateY(90deg) rotateZ(-90deg)",
+        btn3 : "rotateX(90deg) rotateY(0deg) rotateZ(0deg)",
+        btn4 : "rotateX(-90deg) rotateY(0deg) rotateZ(0deg)",
+        btn5 : "rotateX(0deg) rotateY(-90deg) rotateZ(0deg",
+        btn6 : "rotateX(0deg) rotateY(180deg) rotateZ(0deg)"
+    };
+    var btns = document.querySelectorAll('.btn button');
+    var css3d = document.querySelector('.wrap ul');
+    for(var i=0; i<btns.length; i++){
+        if(i != btns.length-1){
+            btns[i].setAttribute("num", 'btn'+(i+1));
+            btns[i].addEventListener('click', function () {
+                css3d.style.transform = transforms[this.getAttribute('num')];
+            });
+        }else {
+            btns[i].addEventListener('click', function () {
+                css3d.style.transform = transforms['btn' + Math.floor(Math.random()*6+1)];
+            });
+        }
+    }
+</script>
+</body>
+</html>

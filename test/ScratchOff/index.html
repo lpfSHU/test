@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <title>刮刮乐</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html{
+            overflow: hidden;
+            height: 100%;
+        }
+        body{
+            height: 100%;
+        }
+        canvas{
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvasImg"></canvas>
+    <canvas id="canvasImgEnvelop"></canvas>
+    <script src="jquery-3.2.0.js"></script>
+<script>
+    var canvasImg = document.getElementById('canvasImg');
+    var canvasImgEnvelop = document.getElementById('canvasImgEnvelop');
+    var width = canvasImg.width = canvasImgEnvelop.width = $(window).width();
+    var height = canvasImg.height = canvasImgEnvelop.height = $(window).height();
+    var ctxImg = canvasImg.getContext('2d');
+    var ctxImgEnvelop = canvasImgEnvelop.getContext('2d');
+
+    var img = new Image();
+    var x1,y1,x2,y2;
+    var timeoutID = null;
+    img.src = './bg.jpg';
+    img.onload = function () {
+        ctxImg.drawImage(img, 0, 0 , width, height);
+    };
+    ctxImgEnvelop.fillStyle = '	#999999';
+    ctxImgEnvelop.fillRect(0, 0, width, height);
+    ctxImgEnvelop.lineCap = 'round';
+    ctxImgEnvelop.lineJoin = 'round';
+    ctxImgEnvelop.lineWidth = 100;
+    ctxImgEnvelop.globalCompositeOperation = 'destination-out';
+    canvasImgEnvelop.addEventListener('touchstart', function (event) {
+        clearTimeout(timeoutID);
+        x1 = event.targetTouches[0].pageX;
+        y1 = event.targetTouches[0].pageY;
+        ctxImgEnvelop.beginPath();
+        ctxImgEnvelop.arc(x1, y1, 50, 0, 2*Math.PI);
+        ctxImgEnvelop.fill();
+    });
+    canvasImgEnvelop.addEventListener('touchmove', function () {
+        ctxImgEnvelop.beginPath();
+        ctxImgEnvelop.moveTo(x1, y1);
+        x2 = event.targetTouches[0].pageX;
+        y2 = event.targetTouches[0].pageY;
+
+        ctxImgEnvelop.lineTo(x2, y2);
+        ctxImgEnvelop.stroke();
+        x1 = x2;
+        y1 = y2;
+    });
+    canvasImgEnvelop.addEventListener('touchend', function () {
+        timeoutID = setTimeout(function () {
+            var count = 0, total = 0;
+            var imgData = ctxImgEnvelop.getImageData(0, 0, width, height);
+            for(var i=0; i<imgData.width; i+=30){
+                for(var j=0; j<imgData.height; j+=30){
+                    if(imgData.data[(i * width + j) * 4 + 3] == 0){
+                        count++;
+                    }
+                    total++;
+                }
+            }
+            if(count/total > 0.7){
+                canvasImgEnvelop.style.display = 'none';
+            }
+//            console.log(count + '---' + total + '---' + count/total)
+        }, 200);
+    });
+</script>
+</body>
+</html>

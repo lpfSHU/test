@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>折纸效果</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #wrap{
+            width: 300px;
+            margin: 0 auto;
+            perspective: 800px;
+            transform-style:preserve-3d;
+            position: relative;
+        }
+        #wrap h2{
+            height: 50px;
+            width: 300px;
+            line-height: 50px;
+            font-size: 30px;
+            text-align: center;
+            background-color: #00aaee;
+            color: whitesmoke;
+            position: relative;
+            z-index: 10;
+        }
+        #wrap div{
+            height: 50px;
+            width: 300px;
+            background-color: #003f54;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            transform-origin: top;
+            transform-style:preserve-3d;
+            transform: rotateX(-120deg);
+            cursor: pointer;
+            box-shadow: inset 0 0 0 25px rgba(0,0,0,.5);
+            transition: 1s;
+            text-align: center;
+        }
+        #wrap span a{
+            color: white;
+            font-size: 20px;
+            line-height: 50px;
+            text-decoration:none;
+        }
+        #wrap>div:nth-of-type(1){
+            top: 50px;
+        }
+        #wrap div.show{
+            animation: 2s open;
+            transform: rotateX(0deg);
+            box-shadow: inset 0 0 0 10px rgba(0,0,0,0);
+        }
+        #wrap div.close{
+            animation: .7s close;
+            transform: rotateX(-120deg);
+            box-shadow: inset 0 0 0 10px rgba(0,0,0,0);
+        }
+        @-webkit-keyframes open {
+            0%{
+                transform: rotateX(-120deg);
+            }
+            25%{
+                transform: rotateX(30deg);
+            }
+            50%{
+                transform: rotateX(-15deg);
+            }
+            75%{
+                transform: rotateX(8deg);
+            }
+            100%{
+                transform: rotateX(0deg);
+            }
+        }
+        @-webkit-keyframes close {
+            0%{
+                transform: rotateX(0deg);
+            }
+            /*25%{*/
+                /*transform: rotateX(30deg);*/
+            /*}*/
+            /*50%{*/
+                /*transform: rotateX(-15deg);*/
+            /*}*/
+            /*75%{*/
+                /*transform: rotateX(0deg);*/
+            /*}*/
+            100%{
+                transform: rotateX(-120deg);
+            }
+        }
+        .control{
+            text-align: center;
+            margin: 10px auto;
+        }
+        .control button{
+            border: 0;
+            width: 60px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            background-color: steelblue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="control">
+    <button id="open">展开</button>
+    <button id="close">关闭</button>
+</div>
+<div id="wrap">
+    <h2 id="title" >作品展示</h2>
+    <div>
+        <span><a href="../../../GoBang/index.html" target="_blank">人机五子棋对战</a></span>
+        <div>
+            <span><a href="../../../H5SHow/index.html" target="_blank">移动端H5展示</a></span>
+            <div>
+                <span><a href="../../../Responsive/src/index.html" target="_blank">响应式网站1</a></span>
+                <div>
+                    <span><a href="../../../ResponsiveWork/index.html" target="_blank">响应式网站2</a></span>
+                    <div>
+                        <span><a href="../../../StickHero/index.html" target="_blank">棍子英雄</a></span>
+                        <div>
+                            <span><a href="../../../test/CSS3-3D/cube/index.html" target="_blank">3D立方体</a></span>
+                            <div>
+                                <span><a href="../../../test/Streamer/index.html" target="_blank">字体流光特效</a></span>
+                                <div>
+                                    <span><a href="../../../test/SectorNavigation/index.html" target="_blank">扇形导航</a></span>
+                                    <div>
+                                        <span><a href="../../../test/slide-derection/index.html" target="_blank">鼠标滑入方向检测</a></span>
+                                        <div>
+                                            <span><a href="../../../test/MobileWeb/start/index.html" target="_blank">移动端demo</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+        var oWrap = document.getElementById('wrap');
+        var oDiv = oWrap.querySelectorAll('#wrap div');
+        var show = false;
+        console.log(title);
+
+        var iDelay = 200;
+        var oTimer = null;
+
+        document.getElementById('open').onclick = function () {
+            var i = 0;
+            if(oTimer){
+                return;
+            }
+            oTimer = setInterval(function () {
+                oDiv[i].className = 'show';
+                i++;
+                if(i == oDiv.length){
+                    clearInterval(oTimer);
+                    oTimer = null;
+                    show = !show;
+                }
+            }, iDelay);
+        };
+
+        document.getElementById('close').onclick = function () {
+            var i = oDiv.length-1;
+            if(oTimer){
+                return;
+            }
+            oTimer = setInterval(function () {
+                oDiv[i].className = 'close';
+                i--;
+                if(i < 0){
+                    clearInterval(oTimer);
+                    oTimer = null;
+                    show = !show;
+                }
+            }, iDelay);
+        }
+
+
+</script>
+</body>
+</html>

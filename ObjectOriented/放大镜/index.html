@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>放大镜</title>
+    <style>
+        #div1{
+            width: 180px;
+            height: 180px;
+            overflow: hidden;
+            /*margin: 0 auto;*/
+            position: relative;
+        }
+        #div1 span{
+            width: 70px;
+            height: 70px;
+            background-color: yellow;
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+            position: absolute;
+            /*left: 0;*/
+            /*top: 0;*/
+            display: none;
+        }
+        #div2{
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            overflow: hidden;
+            left: 250px;
+            top: 50px;
+        }
+        #div2 img{
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="div1">
+    <img src="b2.jpg">
+    <span id="mask"></span>
+</div>
+<div id="div2">
+    <img src="b1.jpg">
+</div>
+<script>
+    window.onload = function () {
+        var oDiv = document.getElementById('div1');
+        var oSpan = document.getElementById('mask');
+        var oDiv2 = document.getElementById('div2');
+        var img2 = document.querySelector('#div2 img');
+        oDiv.onmouseover = function () {
+//            console.log('oDiv onmouseover');
+            oSpan.style.display = 'block';
+        };
+        oDiv.onmouseout = function (event) {
+//            console.log('oDiv onmouseout');
+            event = document.all ? window.event : arguments[0] ? arguments[0] : event;
+            if(event.clientX>oDiv.getBoundingClientRect().left && event.clientX<oDiv.getBoundingClientRect().right && event.clientY>oDiv.getBoundingClientRect().top && event.clientY<oDiv.getBoundingClientRect().bottom){
+                return;
+            }
+            oSpan.style.display = 'none';
+        };
+        oDiv.onmousemove = function (event) {
+            event = document.all ? window.event : arguments[0] ? arguments[0] : event;
+//            console.log(event);
+            var L = event.clientX - oDiv.getBoundingClientRect().left - oSpan.clientWidth/2;
+            var T = event.clientY - oDiv.getBoundingClientRect().top - oSpan.clientHeight/2;
+            if(L < 0){
+                L = 0;
+            }else if(L > oDiv.getBoundingClientRect().width-oSpan.clientWidth){
+                L = oDiv.getBoundingClientRect().width-oSpan.clientWidth;
+            }
+            if(T < 0){
+                T = 0;
+            }else if(T > oDiv.getBoundingClientRect().height - oSpan.clientHeight){
+                T = oDiv.getBoundingClientRect().height - oSpan.clientHeight;
+            }
+            oSpan.style.left = L + 'px';
+            oSpan.style.top = T + 'px';
+
+            var scaleX = L/(oDiv.getBoundingClientRect().width-oSpan.clientWidth);
+            var scaleY = T/(oDiv.getBoundingClientRect().height - oSpan.clientHeight);
+
+            img2.style.left = -scaleX * (img2.offsetWidth - oDiv2.offsetWidth) + 'px';
+            img2.style.top = -scaleY * (img2.offsetHeight - oDiv2.offsetHeight) + 'px';
+        }
+    }
+</script>
+</body>
+</html>

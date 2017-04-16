@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <title>Title</title>
+
+</head>
+<body>
+<!--<audio>-->
+    <!--<source src="842443.mp3" type="audio/mpeg"/>-->
+<!--</audio>-->
+<script src="./vconsole.min.js"></script>
+<script>
+    var audioHTML = '<audio>\
+        <source src="842443.mp3" type="audio/mpeg"/>\
+        </audio>';
+    var div = document.createElement('div');
+    div.innerHTML = audioHTML;
+    var audio = div.querySelector('audio');
+
+    document.querySelector('body').appendChild(div);
+    audio.addEventListener('canplay', function () {
+//        audio.play();
+    });
+    console.log(audio.canPlayType('audio/mpeg'));
+
+    var SHAKE_THRESHOLD = 2000;
+    var last_update = 0;
+    var x, y, z, last_x, last_y, last_z;
+    function deviceMotionHandler(eventData) {
+        var acceleration =eventData.accelerationIncludingGravity;
+        var curTime = new Date().getTime();
+        if ((curTime - last_update)> 200) {
+            var diffTime = curTime -last_update;
+            last_update = curTime;
+            x = acceleration.x;
+            y = acceleration.y;
+            z = acceleration.z;
+            var speed = Math.abs(x +y + z - last_x - last_y - last_z) / diffTime * 10000;
+            if (speed > SHAKE_THRESHOLD) {
+//                alert("shaked!");
+                audio.play();
+            }
+            last_x = x;
+            last_y = y;
+            last_z = z;
+        }
+    }
+    if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', deviceMotionHandler, false);
+    } else {
+    }
+
+
+
+</script>
+
+</body>
+</html>

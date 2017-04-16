@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #div1{
+            width: 100px;
+            height: 100px;
+            background-color: #00aaee;
+            position: absolute;
+            cursor: move;
+        }
+        #div2{
+            width: 100px;
+            height: 100px;
+            background-color: #003f54;
+            position: absolute;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+<div id="div2"></div>
+<script>
+    function extend(obj1,obj2){
+        for(var attr in obj2){
+            obj1[attr] = obj2[attr];
+        }
+    }
+    //继承 : 子类不影响父类，子类可以继承父类的一些功能 ( 代码复用 )
+
+    //属性的继承 : 调用父类的构造函数 call
+
+    //方法的继承 : for in :  拷贝继承 (jquery也是采用拷贝继承extend)
+    window.onload = function(){
+        var d1 = new Drag('div1');
+//        d1.init();
+        var d2 = new DragChild('div2');
+//        d2.init();
+    };
+//  父类
+    function Drag(id) {
+        this.oDiv = document.getElementById(id);
+        this.disX = 0;
+        this.disY = 0;
+        this.init();
+    }
+    Drag.prototype.init = function () {
+        this.oDiv.onmousedown = function (ev) {
+            this.fnDown(ev);
+            ev.cancelBubble=true;
+            return false;
+        }.bind(this);
+    };
+    Drag.prototype.fnDown = function (ev) {
+        ev = ev || window.event;
+        this.disX = ev.clientX - this.oDiv.getBoundingClientRect().left;
+        this.disY = ev.clientY - this.oDiv.getBoundingClientRect().top;
+        document.onmousemove = function (ev) {
+            this.fnMove(ev)
+        }.bind(this);
+        document.onmouseup = this.fnUp;
+    };
+    Drag.prototype.fnMove = function (ev) {
+        ev = ev || window.event;
+        this.oDiv.style.left = ev.clientX - this.disX + 'px';
+        this.oDiv.style.top = ev.clientY - this.disY + 'px';
+        ev.preventDefault();
+    };
+    Drag.prototype.fnUp = function () {
+        document.onmousemove = null;
+        document.onmouseup = null;
+    };
+//  子类
+    function DragChild(id) {
+//        Drag.call(this,id);
+        Drag.bind(this, id)();
+    }
+    extend(DragChild.prototype, Drag.prototype);
+    DragChild.prototype.fnMove = function (ev) {
+        ev = ev || window.event;
+        var L = ev.clientX - this.disX;
+        var T = ev.clientY - this.disY;
+        if(L<0){
+            L = 0;
+        }else if(L + this.oDiv.offsetWidth > document.documentElement.clientWidth){
+            L = document.documentElement.clientWidth - this.oDiv.offsetWidth;
+        }
+        this.oDiv.style.left = L + 'px';
+        this.oDiv.style.top = T + 'px';
+        ev.preventDefault();
+    }
+</script>
+</body>
+</html>

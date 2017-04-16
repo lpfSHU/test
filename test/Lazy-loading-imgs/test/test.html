@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+<script>
+    var poll =null;
+    function scrollCallBack() {
+        clearTimeout(poll);
+        poll = setTimeout(function () {
+            console.log('1');
+        }, 500)
+    }
+    function lazyload() {
+        var root = this;
+        if (document.addEventListener) {
+            root.addEventListener('scroll', scrollCallBack, false);
+            root.addEventListener('load', scrollCallBack, false);
+        } else {
+            root.attachEvent('onscroll', scrollCallBack);
+            root.attachEvent('onload', scrollCallBack);
+        }
+    }
+    lazyload();
+</script>
+</body>
+</html>
