@@ -9,6 +9,8 @@ var csso = require('gulp-csso');
 var autoprefixer = require('gulp-autoprefixer');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
+
+
 gulp.task('task', function () {
     "use strict";
     var jsFilter = filter('**/*.js', {restore: true});
@@ -38,3 +40,21 @@ gulp.task('task', function () {
         .pipe(revReplace())
         .pipe(gulp.dest('dist'));
 });
+
+var browserSync = require('browser-sync').create();
+// 静态服务器
+gulp.task('browser-sync', function() {
+    browserSync.init({
+        server: {
+            baseDir: "./"
+        }
+    });
+});
+
+// 代理
+
+// gulp.task('browser-sync', function() {
+//     browserSync.init({
+//         proxy: "你的域名或IP"
+//     });
+// });
