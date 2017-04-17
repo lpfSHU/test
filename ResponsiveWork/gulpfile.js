@@ -49,12 +49,24 @@ gulp.task('browser-sync', function() {
             baseDir: "./"
         }
     });
+    // gulp.watch("*.html", ['watch']);
+    gulp.watch(["*.html", "js/**/*.js", "css/**/*.css", "html/**/*.html"]).on('change', browserSync.reload);
 });
 
-// 代理
 
 // gulp.task('browser-sync', function() {
 //     browserSync.init({
 //         proxy: "你的域名或IP"
 //     });
 // });
+
+//将ES6代码编译成ES5
+// var babel = require('gulp-babel');
+// gulp.task('babel', function () {
+//     return gulp.src('./js/index.js')
+//         .pipe(babel({
+//             presets: ['es2015']
+//         }))
+//         .pipe(gulp.dest('./dist'));
+// });
+
