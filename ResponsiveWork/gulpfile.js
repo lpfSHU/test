@@ -9,7 +9,7 @@ var csso = require('gulp-csso');
 var autoprefixer = require('gulp-autoprefixer');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
-
+var babel = require("gulp-babel");
 
 gulp.task('task', function () {
     "use strict";
@@ -20,13 +20,14 @@ gulp.task('task', function () {
     return gulp.src('index.html')
         .pipe(useref())
         .pipe(jsFilter)
+        .pipe(babel())
         .pipe(uglify())
         .pipe(jsFilter.restore)
         .pipe(cssFilter)
         .pipe(autoprefixer(
             {
                 browsers: ['> 5%'],
-                cascade: true, //是否美化属性值 默认：true 像这样：
+                cascade: false, //是否美化属性值 默认：true 像这样：
                 //-webkit-transform: rotate(45deg);
                 //        transform: rotate(45deg);
                 remove: true //是否去掉不必要的前缀 默认：true
