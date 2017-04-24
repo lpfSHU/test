@@ -1,0 +1,10 @@
+
+@import "test.css";
+@import "test1.css";
+html body{
+    margin: 0;
+    padding: 0;
+}
+.canvas{
+    position: absolute;
+}

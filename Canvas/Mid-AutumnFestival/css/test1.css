@@ -1,0 +1,9 @@
+.canvas{
+    transition: width 2s;
+    animation: myfirst 2s;
+}
+@keyframes myfirst
+{
+    from {background: red;}
+    to {background: yellow;}
+}

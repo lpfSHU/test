@@ -4,7 +4,7 @@
 import Stars    from './Stars'
 import Moon     from './Moon'
 import Meteor   from './Meteor'
-
+import '../css/index.css'
 let canvas = document.getElementById('canvas'),
     ctx = canvas.getContext('2d'),
     width = window.innerWidth,
